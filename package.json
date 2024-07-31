@@ -6,7 +6,7 @@
 
   "description": "",
 
-  "main": "app.js",
+  "main": "calculatorScripts.js",
 
   "scripts": {
 
