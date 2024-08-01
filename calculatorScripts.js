@@ -47,6 +47,12 @@ function handleButtonClick(btn){
             screenValue = screenValue + btn
             document.getElementById('calcScreen').innerText = screenValue;
             break;
+        case 'BS':
+             //should get rid of last element in string
+             break;
+        case 'C':
+            screenValue = "";
+            document.getElementById('calcScreen').innerText = '0';
         default:
             break;
     }
