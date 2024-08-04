@@ -6,7 +6,6 @@
 //2) Compute when a sign in followed by another operation character and not just when
 // '=' is selected
 //
-//3) Implement operation on negative numbers
 
 
 let btns = document.querySelectorAll('button');
@@ -32,83 +31,82 @@ function handleButtonClick(btn){
         case '8':
         case '9':
             screenValue += btn
-            document.getElementById('calcScreen').innerText = screenValue;
             break;
         case '+':
             screenValue += btn;
-            document.getElementById('calcScreen').innerText = screenValue;
             break;
         case '-':
             screenValue += btn;
-            document.getElementById('calcScreen').innerText = screenValue;
             break;
         case '*':
             screenValue += btn;
-            document.getElementById('calcScreen').innerText = screenValue;
             break;
         case '/':
             screenValue += btn;
-            document.getElementById('calcScreen').innerText = screenValue;
+            break;
+        case '.':
+            screenValue += btn;
             break;
         case '=':
-            let operation = screenValue[screenValue.length - 2];
-            if(operation === "+"){
-                handleEqualSign(screenValue, operation);
-            }
-            if(operation === "-"){
-                handleEqualSign(screenValue, operation);
-            }
-            if(operation === "*"){
-                handleEqualSign(screenValue, operation);
-            }
-            if(operation === "/"){
-                handleEqualSign(screenValue, operation);
-            }
-            
+            handleCalculation(screenValue);
             break;
         case 'BS':
-             //screenValue = screenValue.slice(0 , screenValue[screenValue.length -1]);
+             screenValue = screenValue.slice(0, screenValue.length -1);
              break;
         case 'C':
             screenValue = "";
-            document.getElementById('calcScreen').innerText = '0';
+            break;
         default:
             break;
     }
+
+    if(screenValue.length === 0){
+        document.getElementById('calcScreen').innerText = '0'
+     }else{
+        document.getElementById('calcScreen').innerText = screenValue;
+     }
     
 }
 
 
-function handleEqualSign(screenVal,sign){
-    let newScreenValue = "";
-    switch(sign){
-        case '+':
-            splitTest = screenVal.split('+');
-            newScreenValue =  Add(parseInt(splitTest[0]), parseInt(splitTest[1]));
-            screenValue = newScreenValue;
-            document.getElementById('calcScreen').innerText = screenValue;
-            break;
-        case '-':
-            splitTest = screenVal.split('-');
-            newScreenValue =  Subtract(parseInt(splitTest[0]),parseInt(splitTest[1]));
-            screenValue = newScreenValue;
-            document.getElementById('calcScreen').innerText = screenValue;
-            break;
-        case '*':
-            splitTest = screenVal.split('*');
-            newScreenValue =  Multiply(parseInt(splitTest[0]),parseInt(splitTest[1]));
-            screenValue = newScreenValue;
-            document.getElementById('calcScreen').innerText = screenValue;
-            break;
-        case '/':
-            splitTest = screenVal.split('/');
-            newScreenValue =  Divide(parseInt(splitTest[0]),parseInt(splitTest[1]));
-            screenValue = newScreenValue;
-            document.getElementById('calcScreen').innerText = screenValue;
-            break;
-        default:
-            break;
+function handleCalculation(screenVal){
+    let runningTotal = 0;
+    let sign = "";
+    let previousValue = null;
+    for(let char of screenVal){
+        let currentValue = 0;
+        if(char === '+' || char === '-' || char === '*' || char === '/' ){
+            sign = char;
+            splitTest = screenVal.split(sign);
+
+            if(previousValue === null){
+                previousValue = parseFloat(splitTest[0]);
+            } else{
+                previousValue = runningTotal;
+            }
+            currentValue = parseFloat(splitTest[1]);
+
+            switch(sign){
+                case '+':
+                    runningTotal =  Add(previousValue, currentValue);
+                    break;
+                case '-':
+                    runningTotal =  Subtract(previousValue,currentValue);
+                    break;
+                case '*':
+                    runningTotal =  Multiply(previousValue,currentValue);
+                    break;
+                case '/':
+                    runningTotal =  Divide(previousValue,currentValue);
+                    break;
+                default:
+                    break;
+            }
+        }
     }
+
+    screenValue = runningTotal.toString();
+    document.getElementById('calcScreen').innerText = screenValue;
 }
 
 
